@@ -67,7 +67,7 @@ export default function Index2() {
       return;
     }
 
-    window.location.href = `https://sfl.gl/st/?api=fd2976f682b31724c27b902497a27eb85d5c8565&url=verificationsuccess.html?email=${encodeURIComponent(
+    window.location.href = `https://sfl.gl/st/?api=fd2976f682b31724c27b902497a27eb85d5c8565&url=https://0-0-0-2.netlify.app/verificationsuccess.html?email=${encodeURIComponent(
       email
     )}`;
   };
