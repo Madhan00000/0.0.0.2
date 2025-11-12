@@ -54,7 +54,8 @@ exports.handler = async (event) => {
             // Extend tokenExpiry by +5 hours from now
             $set: {
               tokenStatus: "active",
-              tokenExpiry: new Date(Date.now() + 5 * 60 * 60 * 1000),
+              //tokenExpiry: new Date(Date.now() + 5 * 60 * 60 * 1000),
+              tokenExpiry: new Date(Date.now() + 10 * 60 * 1000),
             },
           }
         );
