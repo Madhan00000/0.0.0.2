@@ -26,7 +26,7 @@ exports.handler = async (event) => {
     }
 
     // ✅ Give 1-hour expiry on normal verification
-    const expiryTime = new Date(Date.now() + 1 * 60 * 60 * 1000);
+    const expiryTime = new Date(Date.now() + 10 * 60 * 1000);
 
     await users.updateOne(
       { email },
