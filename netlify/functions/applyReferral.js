@@ -31,16 +31,11 @@ exports.handler = async (event) => {
       return { statusCode: 404, body: JSON.stringify({ error: "Referral code not found" }) };
     }
 
-    // Add 1 day for referrer
-    // Add 5 minutes for referrer (local time: IST)
-const FIVE_MINUTES_MS = 10 * 60 * 1000;
-//const IST_OFFSET = 5.5 * 60 * 60 * 1000; // +5 hours 30 minutes
-const now = new Date();
-
-const newExpiry =
-  referrer.tokenExpiry && new Date(referrer.tokenExpiry) > now
-    ? new Date(new Date(referrer.tokenExpiry).getTime() + FIVE_MINUTES_MS)
-    : new Date(now.getTime() + FIVE_MINUTES_MS);
+    // ✅ Extend expiry by +10 minutes if active, else start fresh
+    const now = new Date();
+    const currentExpiry = referrer.tokenExpiry ? new Date(referrer.tokenExpiry) : now;
+    const baseTime = currentExpiry > now ? currentExpiry : now;
+    const newExpiry = new Date(baseTime.getTime() + 10 * 60 * 1000);
 
     await users.updateOne(
       { referralCode },
@@ -59,7 +54,7 @@ const newExpiry =
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Referral applied successfully! Referrer got +1 day." }),
+      body: JSON.stringify({ message: "Referral applied successfully! Referrer’s token extended." }),
     };
   } catch (error) {
     console.error(error);
