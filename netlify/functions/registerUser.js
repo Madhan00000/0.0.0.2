@@ -46,6 +46,7 @@ exports.handler = async (event) => {
       const referrer = await users.findOne({ referralCode });
 
       if (referrer) {
+        const IST_OFFSET = 5.5 * 60 * 60 * 1000; // +5:30 hrs
         // Add this new user to referrer’s referredUsers
         await users.updateOne(
           { referralCode },
@@ -55,7 +56,7 @@ exports.handler = async (event) => {
             $set: {
               tokenStatus: "active",
               //tokenExpiry: new Date(Date.now() + 5 * 60 * 60 * 1000),
-              tokenExpiry: new Date(Date.now() + 10 * 60 * 1000),
+              tokenExpiry: new Date(Date.now() + 10 * 60 * 1000 + IST_OFFSET),
             },
           }
         );
