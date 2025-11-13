@@ -33,14 +33,14 @@ exports.handler = async (event) => {
 
     // Add 1 day for referrer
     // Add 5 minutes for referrer (local time: IST)
-const FIVE_MINUTES_MS = 5 * 60 * 1000;
-const IST_OFFSET = 5.5 * 60 * 60 * 1000; // +5 hours 30 minutes
+const FIVE_MINUTES_MS = 10 * 60 * 1000;
+//const IST_OFFSET = 5.5 * 60 * 60 * 1000; // +5 hours 30 minutes
 const now = new Date();
 
 const newExpiry =
   referrer.tokenExpiry && new Date(referrer.tokenExpiry) > now
-    ? new Date(new Date(referrer.tokenExpiry).getTime() + FIVE_MINUTES_MS + IST_OFFSET)
-    : new Date(now.getTime() + FIVE_MINUTES_MS + IST_OFFSET);
+    ? new Date(new Date(referrer.tokenExpiry).getTime() + FIVE_MINUTES_MS)
+    : new Date(now.getTime() + FIVE_MINUTES_MS);
 
     await users.updateOne(
       { referralCode },
