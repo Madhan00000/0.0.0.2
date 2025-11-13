@@ -48,12 +48,14 @@ exports.handler = async (event) => {
         // Add referred user to referrer’s record
         await users.updateOne(
           { referralCode },
-          { $push: { referredUsers: email } }
+          { $addToSet: { referredUsers: email } }
         );
 
-        // ✅ Extend referrer’s token by +6 hours (1 base + 5 bonus)
-        const newExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now (local equivalent)
-
+        // ✅ Extend referrer’s token expiry by +10 minutes from existing expiry or now
+        const now = new Date();
+        const currentExpiry = referrer.tokenExpiry ? new Date(referrer.tokenExpiry) : now;
+        const baseTime = currentExpiry > now ? currentExpiry : now;
+        const newExpiry = new Date(baseTime.getTime() + 10 * 60 * 1000);
 
         await users.updateOne(
           { referralCode },
