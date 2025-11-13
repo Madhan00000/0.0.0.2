@@ -46,17 +46,19 @@ exports.handler = async (event) => {
       const referrer = await users.findOne({ referralCode });
 
       if (referrer) {
-        //const IST_OFFSET = 5.5 * 60 * 60 * 1000; // +5:30 hrs
-        // Add this new user to referrer’s referredUsers
+        const now = new Date();
+        const currentExpiry = referrer.tokenExpiry ? new Date(referrer.tokenExpiry) : now;
+        const baseTime = currentExpiry > now ? currentExpiry : now;
+        const newExpiry = new Date(baseTime.getTime() + 10 * 60 * 1000);
+
+        // Add this new user to referrer’s referredUsers & extend expiry
         await users.updateOne(
           { referralCode },
           {
             $push: { referredUsers: email },
-            // Extend tokenExpiry by +5 hours from now
             $set: {
               tokenStatus: "active",
-              //tokenExpiry: new Date(Date.now() + 5 * 60 * 60 * 1000),
-              tokenExpiry: new Date(Date.now() + 10 * 60 * 1000),
+              tokenExpiry: newExpiry,
             },
           }
         );
@@ -65,7 +67,6 @@ exports.handler = async (event) => {
 
     // Save new user
     await users.insertOne(newUser);
-
     await client.close();
 
     return {
