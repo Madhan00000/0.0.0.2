@@ -52,8 +52,8 @@ exports.handler = async (event) => {
         );
 
         // ✅ Extend referrer’s token by +6 hours (1 base + 5 bonus)
-        const newExpiry = new Date();
-        newExpiry.setHours(newExpiry.getHours() + 6);
+        const newExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now (local equivalent)
+
 
         await users.updateOne(
           { referralCode },
